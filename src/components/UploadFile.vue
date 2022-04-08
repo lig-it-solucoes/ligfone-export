@@ -1,19 +1,34 @@
 <template>
-  <h3 class="h6">Envie o arquivo .CSV</h3>
-  
   <form @submit.prevent="sendFile">
-    <div class="input-group">
-      <input type="file" ref="fileInput" class="form-control" accept="text/csv" required>
+    <div class="row gy-3">
+      <div class="col-sm-5 col-md-4">
+        <h3 class="h6">Escolha o DDD local</h3>
+        <select 
+          v-model="dddSelected" 
+          required
+          class="form-select"
+        >
+          <option disabled value="">Escolha um item</option>
+          <option v-for="(state, number) in ddds" :key="number" :value="number">{{ number }} - {{ state }}</option>
+        </select>
+      </div>
+      
+      <div class="col-sm">
+        <h3 class="h6">Selecione o arquivo .CSV</h3>
+        <div class="input-group">
+          <input type="file" ref="fileInput" class="form-control" accept="text/csv" required>
 
-      <button type="submit" class="btn btn-warning">
-        <span 
-          v-show="loading"
-          class="spinner-border spinner-border-sm" 
-          role="status" 
-          aria-hidden="true"
-        ></span>
-        Gerar
-      </button>
+          <button type="submit" class="btn btn-warning">
+            <span 
+              v-show="loading"
+              class="spinner-border spinner-border-sm" 
+              role="status" 
+              aria-hidden="true"
+            ></span>
+            Gerar
+          </button>
+        </div>
+      </div>
     </div>
   </form>
 
@@ -40,6 +55,7 @@
 
 <script>
 import FileConverter from '@/services/FileConverter.js'
+import dddList from '@/utils/dddBrazil.json'
 
 export default {
   emits: ['fileReady'],
@@ -53,6 +69,8 @@ export default {
       generated: false,
       loadingProgress: 50,
       alertMessage: '',
+      ddds: dddList.estadoPorDdd,
+      dddSelected: "",
     }
   },
   computed: {
@@ -66,20 +84,23 @@ export default {
   },
   methods: {
     sendFile() {
-      console.log('Sending .csv file')
-
       this.loading = true
       this.generated = false
       this.loadingProgress = 0
 
       const file = this.$refs.fileInput.files[0]
+      const ddd = this.dddSelected
 
-      if (!this.checkFile(file)) {
+      console.log(`Sending ${file.name} file`)
+      console.log(`DDD ${ddd} selected`)
+
+      if (!this.checkFile(file, ddd)) {
         this.loading = false
         return;
       }
 
       this.converter.setFile(file)
+      this.converter.setDDD(ddd)
       this.converter.convert()
         .then(this.fileConveted)
     },
@@ -92,11 +113,16 @@ export default {
         this.$emit('fileReady', this.converter.generateCsv())
       }, 500)
     },
-    checkFile(file) {
+    checkFile(file, ddd) {
       this.alert(null)
       
-      if (file === undefined) {
+      if (!file) {
         this.alert('Por favor, selecione um arquivo.')
+        return false;
+      }
+   
+      if (!ddd) {
+        this.alert('Por favor, selecione o DDD local.')
         return false;
       }
 
