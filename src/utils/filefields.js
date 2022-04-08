@@ -43,13 +43,15 @@ function normalizePhone(phone) {
   if (!result) return phone;
 
   const [fullNumber, cc, ddd, number] = result
+
+  phone = `${ddd}${number}` // force remove 55 country number
   
   if (number.length == 8) {
     // check if first digit is 7, 8 or 9 (mobile) 
     const firstDigit = parseInt(number.substring(0, 1))
 
     if ([7,8,9].includes(firstDigit)) {
-      phone = `${cc}${ddd}9${number}`
+      phone = `${ddd}9${number}`
     }
   }
   
