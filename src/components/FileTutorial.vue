@@ -1,15 +1,21 @@
 <template>
-  <div class="h5 text-center">Como enviar o arquivo?</div>
-
-  <p>O arquivo deve ser enviado no formato .csv com os seguintes campos:</p>
+  <div class="h5 text-center">Como processar o arquivo?</div>
 
   <ul>
-    <li v-for="(field, index) in inputFields" :key="index">
-      Campo {{ field.inputPosition+1 }}: {{ field.title }}
-    </li>
-  </ul>
+    <li>Escolha o seu DDD local</li>
+    <li>O arquivo deve ser enviado no formato .csv com os seguintes campos:</li>
 
-  <p>Todos os arquivos <strong>DEVEM</strong> conter cabeçalho. Se não houver, a primeira linha será ignorada.</p>
+    <ol>
+      <li v-for="(field, index) in inputFields" :key="index">
+        {{ field.title }}
+      </li>
+    </ol>
+
+    <p>O arquivo <strong>DEVE</strong> conter cabeçalho. Se não houver, a primeira linha será ignorada.</p>
+
+    <li>Clique em "Gerar" para que seu arquivo seja processado</li>
+    <li>Após a conclusão, baixe o arquivo gerado</li>
+  </ul>
 </template>
 
 <script>
