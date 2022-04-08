@@ -4,6 +4,7 @@ import { formatRows } from '@/utils/filefields.js'
 class FileConverter {  
   constructor() {
     this.file = null
+    this.ddd = null
     this.formated = []
   }
 
@@ -11,8 +12,13 @@ class FileConverter {
     this.file = file
   }
 
+  setDDD(ddd) {
+    this.ddd = ddd
+  }
+
   convert() {
     const currentInstance = this
+    const ddd = this.ddd
     
     return new Promise((resolve, reject) => {
       Papa.parse(this.file, {
@@ -23,7 +29,7 @@ class FileConverter {
           
           data.shift() // remove first line (header)
 
-          currentInstance.formated = formatRows(data)
+          currentInstance.formated = formatRows(data, ddd)
 
           resolve(currentInstance.formated)
         }

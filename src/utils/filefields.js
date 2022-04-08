@@ -25,9 +25,9 @@ const INPUTFIELDS = {
   },
 }
 
-function formatRows(rows) {
+function formatRows(rows, dddLocal) {
   return rows.map(row => [
-    normalizePhone(extractCell(row, 'phone')),
+    normalizePhone(extractCell(row, 'phone'), dddLocal),
     extractCell(row, 'firstname') + " " + extractCell(row, 'lastname'),
     extractCell(row, 'company'),
     extractCell(row, 'document'),
@@ -35,24 +35,30 @@ function formatRows(rows) {
   ])
 }
 
-function normalizePhone(phone) {
+function normalizePhone(phone, dddLocal) {
   if (!phone) return null;
   
   const result = phone.match(/([0-9]{2})([0-9]{2})([0-9]{8,9})/)
 
   if (!result) return phone;
 
-  const [fullNumber, cc, ddd, number] = result
+  let [fullNumber, cc, ddd, number] = result
 
-  phone = `${ddd}${number}` // force remove 55 country number
-  
   if (number.length == 8) {
     // check if first digit is 7, 8 or 9 (mobile) 
     const firstDigit = parseInt(number.substring(0, 1))
 
     if ([7,8,9].includes(firstDigit)) {
-      phone = `${ddd}9${number}`
+      number = `9${number}`
     }
+  }
+
+  console.log(ddd, dddLocal, number)
+  
+  if (dddLocal == ddd) {
+    phone = number // force remove DDD local from phone number
+  } else {
+    phone = `${ddd}${number}` // force remove 55 country number
   }
   
   return phone
