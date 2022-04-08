@@ -17,6 +17,7 @@ class FileConverter {
     return new Promise((resolve, reject) => {
       Papa.parse(this.file, {
         //header: true,
+        skipEmptyLines: 'greedy',
         complete: function(results) {
           const data = results.data
           
