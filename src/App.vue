@@ -24,6 +24,10 @@ import FileTutorial from '@/components/FileTutorial.vue'
     <section class="card card-body bg-dark mt-3">
       <FileTutorial></FileTutorial>
     </section>
+
+    <div class="text-center mt-2">
+      <a href="https://www.ligit.com.br" class="text-secondary" target="_blank">LIG-it</a> &copy; 2022
+    </div>
   </main>
 </template>
 
@@ -41,7 +45,7 @@ import FileTutorial from '@/components/FileTutorial.vue'
 }
 
 .wrapper {
-  padding: 50px;
+  padding: 2em;
   margin: 20px auto;
   max-width: 900px;
 }
